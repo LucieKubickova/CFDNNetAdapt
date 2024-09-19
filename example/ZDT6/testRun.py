@@ -10,7 +10,7 @@ import numpy as np
 import dill as pickle
 import multiprocessing
 from testFunctions import *
-from CFDNNetAdaptV4 import *
+from CFDNNetAdaptV3 import *
 
 # bounds
 pMin = 0.0
