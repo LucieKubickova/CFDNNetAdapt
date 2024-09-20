@@ -13,7 +13,7 @@ from CFDNNetAdaptV3 import *
 import matplotlib.pyplot as plt
 
 # parameters
-runDir = "01_algoRuns/run_01/"
+runDir = "01_algoRuns/run_03/"
 xName = "f1"
 yName = "f2"
 logName = "log.out"
@@ -31,34 +31,6 @@ algorithm.smpDir = "00_prepData/"
 algorithm.prbDir = "ZDT6/"
 algorithm.dataNm = "10_platypusAllSolutions.dat"
 algorithm.minMax = ""
-
-#~ # algorithm parameters
-#~ algorithm.nSam = 1000
-#~ algorithm.deltaNSams = [1000]
-#~ algorithm.nNN = 4
-#~ algorithm.minN = 2
-#~ algorithm.maxN = 20
-#~ algorithm.nHidLay = 3
-#~ algorithm.tol = 1e-5
-#~ algorithm.iMax = 200
-#~ algorithm.dRN = 1
-#~ algorithm.nComps = 16
-#~ algorithm.nSeeds = 4
-
-#~ # parameters for ANN training
-#~ algorithm.trainPro = 75
-#~ algorithm.valPro = 15
-#~ algorithm.testPro = 10
-#~ algorithm.kMax = 10000
-#~ algorithm.rEStop = 1e-5
-#~ algorithm.dnnVerbose = False
-
-#~ # parameters for MOP
-#~ algorithm.pMin = 0.0
-#~ algorithm.pMax = 1.0
-#~ algorithm.offSize = 100
-#~ algorithm.popSize = 100
-#~ algorithm.nGens = 250
 
 # prepare plot
 fig = plt.figure(figsize = (16,9))
@@ -146,10 +118,10 @@ for n in range(len(bestDNNs)):
 ax1.set_xlabel(xName)
 ax2.set_ylabel(yName)
 
-ax1.set_title("recomputed space")
-ax2.set_title("predicted space")
+ax1.set_title("predicted space")
+ax2.set_title("recomputed space")
 
 plt.legend()
-plt.savefig("objectiveSpacePlot.png")
+plt.savefig("objSpacePlot.png")
 plt.show()
 plt.close()
