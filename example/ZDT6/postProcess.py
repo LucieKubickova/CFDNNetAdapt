@@ -13,7 +13,7 @@ from CFDNNetAdaptV3 import *
 import matplotlib.pyplot as plt
 
 # parameters
-runDir = "01_algoRuns/run_03/"
+runDir = "01_algoRuns/run_02/"
 xName = "f1"
 yName = "f2"
 logName = "log.out"
@@ -34,8 +34,10 @@ algorithm.minMax = ""
 
 # prepare plot
 fig = plt.figure(figsize = (16,9))
-ax1 = fig.add_subplot(121)
-ax2 = fig.add_subplot(122)
+ax1 = fig.add_subplot(221)
+ax2 = fig.add_subplot(222)
+ax3 = fig.add_subplot(223)
+ax4 = fig.add_subplot(224)
 
 # read scales
 smpMins, smpMaxs = algorithm.getScalesFromFile(algorithm.smpDir + algorithm.prbDir, algorithm.dataNm)
@@ -44,12 +46,18 @@ smpMins, smpMaxs = algorithm.getScalesFromFile(algorithm.smpDir + algorithm.prbD
 optSols = optSolsZDT6(100, algorithm.nPars)
 f1s = list()
 f2s = list()
+x1s = list()
+x2s = list()
 for i in range(len(optSols)):
     f1, f2 = ZDT6(optSols[i])
     f1s.append(f1)
     f2s.append(f2)
+    x1s.append(optSols[i][0])
+    x2s.append(optSols[i][1])
 ax1.plot(f1s, f2s, label = "optimal solution", color = "black")
 ax2.plot(f1s, f2s, label = "optimal solution", color = "black")
+ax3.scatter(x1s, x2s, label = "optimal solution", color = "black", marker = "o")
+ax4.scatter(x1s, f2s, label = "optimal solution", color = "black", marker = "o")
 
 # read samples
 source, target = algorithm.loadAndScaleData(algorithm.smpDir + algorithm.prbDir, algorithm.dataNm, algorithm.nPars, algorithm.nObjs)
@@ -57,13 +65,19 @@ source, target = algorithm.loadAndScaleData(algorithm.smpDir + algorithm.prbDir,
 # rescale samples
 xs = list()
 ys = list()
+x1s = list()
+x2s = list()
 for i in range(len(target[0])):
     xs.append(target[0][i]*(smpMaxs[algorithm.nPars+0] - smpMins[algorithm.nPars+0]) + smpMins[algorithm.nPars+0])
     ys.append(target[1][i]*(smpMaxs[algorithm.nPars+1] - smpMins[algorithm.nPars+1]) + smpMins[algorithm.nPars+1])
+    x1s.append(source[0][i]*(smpMaxs[0] - smpMins[0]) + smpMins[0])
+    x2s.append(source[1][i]*(smpMaxs[1] - smpMins[1]) + smpMins[1])
 
 # plot sampels
 ax1.scatter(xs, ys, label = "NSGA-II", color = "black", marker = "x")
 ax2.scatter(xs, ys, label = "NSGA-II", color = "black", marker = "x")
+ax3.scatter(x1s, x2s, label = "NSGA-II", color = "black", marker = "x")
+ax4.scatter(x1s, ys, label = "NSGA-II", color = "black", marker = "x")
 
 # read cfdnnetadapt log
 fileName = runDir + logName
@@ -93,6 +107,8 @@ for n in range(len(bestDNNs)):
     ys = list()
     recxs = list()
     recys = list()
+    x1s = list()
+    x2s = list()
     for i in range(len(result)):
         netPars = result[i].variables[:]
         netOuts = result[i].objectives[:]
@@ -111,17 +127,32 @@ for n in range(len(bestDNNs)):
         recxs.append(recx)
         recys.append(recy)
 
+        # parameters
+        x1s.append(data[0])
+        x2s.append(data[1])
+
     ax1.scatter(xs, ys, label = bestDNNs[n], color = colors[n])
     ax2.scatter(recxs, recys, label = bestDNNs[n], color = colors[n])
+    ax3.scatter(x1s, x2s, label = bestDNNs[n], color = colors[n])
+    ax4.scatter(x1s, recys, label = bestDNNs[n], color = colors[n])
 
 # finish plot
 ax1.set_xlabel(xName)
+ax2.set_xlabel(xName)
+
+ax1.set_ylabel(yName)
 ax2.set_ylabel(yName)
+
+ax3.set_xlabel("x0")
+ax4.set_xlabel("x0")
+
+ax3.set_ylabel("x1")
+ax4.set_ylabel(yName)
 
 ax1.set_title("predicted space")
 ax2.set_title("recomputed space")
 
 plt.legend()
-plt.savefig("objSpacePlot.png")
+plt.savefig(runDir + "objSpacePlot.png")
 plt.show()
 plt.close()
