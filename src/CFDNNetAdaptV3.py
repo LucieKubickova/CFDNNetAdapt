@@ -434,7 +434,7 @@ class CFDNNetAdapt:
     def runDNNOptimization(self, netStruct, netNm, netDir, parallelNum):
         # list net save directory
         ls = os.listdir(netDir)
-        ls = [i for i in ls if not ".png" in i]
+        ls = [i for i in ls if ".png" not in i]
     
         # load all net seeds
         self.nets = list()
@@ -469,7 +469,7 @@ class CFDNNetAdapt:
         self.toCompare = list()
         while len(self.toCompare) < self.nComps:
             toAdd = random.randint(0, self.popSize-1)
-            if not toAdd in self.toCompare:
+            if toAdd not in self.toCompare:
                 self.toCompare.append(toAdd)
 
         # load optimization data
@@ -492,7 +492,7 @@ class CFDNNetAdapt:
             secToCompare = list()
             while len(secToCompare) < bads:
                 toAdd = random.randint(0, self.popSize-1)
-                if not toAdd in self.toCompare and not toAdd in secToCompare:
+                if toAdd not in self.toCompare and toAdd not in secToCompare:
                     secToCompare.append(toAdd)
     
             self.toCompare = secToCompare[:]
@@ -665,7 +665,7 @@ class CFDNNetAdapt:
         for netDir in netDirs:
             # read directory
             ls = os.listdir(netDir)
-            ls = [i for i in ls if not ".png" in i]
+            ls = [i for i in ls if ".png" not in i]
 
             # loop over net seeds
             for seed in ls:
