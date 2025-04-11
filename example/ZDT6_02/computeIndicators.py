@@ -81,7 +81,7 @@ data = np.array(data)
 ax2.scatter(data[:,xI], data[:,yI], label = "NSGA-II", color = "black", marker = "x")
 
 # prepare and plot optimal solution
-optSolsIGD = optSolsZDT6(10, algorithm.nPars)
+optSolsIGD = optSolsZDT6(100, algorithm.nPars)
 optSolsHV = optSolsZDT6(3000, algorithm.nPars)
 for i in range(len(optSolsHV)):
     f1, f2 = ZDT6(optSolsHV[i])
@@ -211,4 +211,5 @@ ax2.set_xlabel("number of samples")
 ax2.set_ylabel("difference to optimal hypervolume")
 
 plt.savefig(runDir + "indicators.png")
+plt.show()
 plt.close()
