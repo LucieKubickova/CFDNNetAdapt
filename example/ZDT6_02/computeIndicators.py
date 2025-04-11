@@ -14,7 +14,7 @@ from CFDNNetAdaptV3 import *
 import matplotlib.pyplot as plt
 
 # parameters
-runDir = "01_algoRuns/run_02/"
+runDir = "01_algoRuns/run_01/"
 xName = "f1"
 yName = "f2"
 logName = "log.out"
@@ -31,7 +31,7 @@ algorithm.nObjs = 2
 algorithm.nOuts = 2
 algorithm.mainDir = "01_algoRuns/"
 algorithm.smpDir = "00_prepData/"
-algorithm.prbDir = "ZDT6/"
+algorithm.prbDir = ""
 algorithm.dataNm = "10_platypusAllSolutions.dat"
 algorithm.minMax = ""
 

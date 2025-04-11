@@ -29,7 +29,7 @@ algorithm.nObjs = 2
 algorithm.nOuts = 2
 algorithm.mainDir = "01_algoRuns/"
 algorithm.smpDir = "00_prepData/"
-algorithm.prbDir = "ZDT6/"
+algorithm.prbDir = ""
 algorithm.dataNm = "10_platypusAllSolutions.dat"
 algorithm.minMax = ""
 

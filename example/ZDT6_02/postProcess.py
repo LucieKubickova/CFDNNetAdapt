@@ -13,7 +13,7 @@ from CFDNNetAdaptV3 import *
 import matplotlib.pyplot as plt
 
 # parameters
-runDir = "01_algoRuns/run_02/"
+runDir = "01_algoRuns/run_01/"
 xName = "f1"
 yName = "f2"
 logName = "log.out"
@@ -28,16 +28,14 @@ algorithm.nObjs = 2
 algorithm.nOuts = 2
 algorithm.mainDir = "01_algoRuns/"
 algorithm.smpDir = "00_prepData/"
-algorithm.prbDir = "ZDT6/"
+algorithm.prbDir = ""
 algorithm.dataNm = "10_platypusAllSolutions.dat"
 algorithm.minMax = ""
 
 # prepare plot
 fig = plt.figure(figsize = (16,9))
-ax1 = fig.add_subplot(221)
-ax2 = fig.add_subplot(222)
-ax3 = fig.add_subplot(223)
-ax4 = fig.add_subplot(224)
+ax1 = fig.add_subplot(121)
+ax2 = fig.add_subplot(122)
 
 # read scales
 smpMins, smpMaxs = algorithm.getScalesFromFile(algorithm.smpDir + algorithm.prbDir, algorithm.dataNm)
@@ -56,8 +54,6 @@ for i in range(len(optSols)):
     x2s.append(optSols[i][1])
 ax1.plot(f1s, f2s, label = "optimal solution", color = "black")
 ax2.plot(f1s, f2s, label = "optimal solution", color = "black")
-ax3.scatter(x1s, x2s, label = "optimal solution", color = "black", marker = "o")
-ax4.scatter(x1s, f2s, label = "optimal solution", color = "black", marker = "o")
 
 # read samples
 source, target = algorithm.loadAndScaleData(algorithm.smpDir + algorithm.prbDir, algorithm.dataNm, algorithm.nPars, algorithm.nObjs)
@@ -76,8 +72,6 @@ for i in range(len(target[0])):
 # plot sampels
 ax1.scatter(xs, ys, label = "NSGA-II", color = "black", marker = "x")
 ax2.scatter(xs, ys, label = "NSGA-II", color = "black", marker = "x")
-ax3.scatter(x1s, x2s, label = "NSGA-II", color = "black", marker = "x")
-ax4.scatter(x1s, ys, label = "NSGA-II", color = "black", marker = "x")
 
 # read cfdnnetadapt log
 fileName = runDir + logName
@@ -133,8 +127,6 @@ for n in range(len(bestDNNs)):
 
     ax1.scatter(xs, ys, label = bestDNNs[n], color = colors[n])
     ax2.scatter(recxs, recys, label = bestDNNs[n], color = colors[n])
-    ax3.scatter(x1s, x2s, label = bestDNNs[n], color = colors[n])
-    ax4.scatter(x1s, recys, label = bestDNNs[n], color = colors[n])
 
 # finish plot
 ax1.set_xlabel(xName)
@@ -142,12 +134,6 @@ ax2.set_xlabel(xName)
 
 ax1.set_ylabel(yName)
 ax2.set_ylabel(yName)
-
-ax3.set_xlabel("x0")
-ax4.set_xlabel("x0")
-
-ax3.set_ylabel("x1")
-ax4.set_ylabel(yName)
 
 ax1.set_title("predicted space")
 ax2.set_title("recomputed space")
