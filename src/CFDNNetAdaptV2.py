@@ -13,7 +13,7 @@ import pyrennModV3 as prn
 import platypusModV2 as plat
 from operator import itemgetter
 
-import matplotlib.pyplot as plt
+#~ import matplotlib.pyplot as plt
 
 # version 1 - more parallel evaluation
 # version 2 - more separation in functions, renaming
@@ -59,6 +59,7 @@ class CFDNNetAdapt:
         self.smpDir = None # directory with samples
         self.prbDir = None # specific data directory
         self.dataNm = None # name of the file with data
+        self.specRunDir = None # specified run directory, optional
 
         # evaluation functions
         self.dnnEvalFunc = None # custom function for dnn evaluation in optimization
@@ -77,9 +78,12 @@ class CFDNNetAdapt:
 
         # prepare directories
         self.prepOutDir(self.mainDir)
-        ls = os.listdir(self.mainDir)
-        ls = [i for i in ls if "run" in i]
-        self.runDir = self.mainDir + "run_%02d/" % (len(ls)+1)
+        if self.specRunDir == None:
+            ls = os.listdir(self.mainDir)
+            ls = [i for i in ls if "run" in i]
+            self.runDir = self.mainDir + "run_%02d/" % (len(ls)+1)
+        else:
+            self.runDir = self.mainDir + self.specRunDir
         self.prepOutDir(self.runDir)
 
         # prepare samples
@@ -520,7 +524,7 @@ class CFDNNetAdapt:
     
         prevSamTotal = nSamTotal
         self.nSam += self.deltaNSam
-        nSamTotal = self.nSam/self.trainPro*100
+        nSamTotal = int(self.nSam/self.trainPro*100)
 
         last = False
         if nSamTotal > self.maxSam:
@@ -617,23 +621,23 @@ class CFDNNetAdapt:
                     [net] = pickle.load(file)
 
                 # test the network on validation data
-                out = np.array(prn.NNOut(self.sourceVl,net))
+                out = np.array(prn.NNOut(self.sourceTe,net))
 
                 # transpose
-                targetVl = self.targetVl.T
+                targetTe = self.targetTe.T
                 out = out.T
 
-                # plot the result
+                # plot the result ## NOTE: only prepared for two outputs
                 mS = 7
-                plt.plot(targetVl[:,0], out[:,0], 'o', ms = mS, color = "tab:red")
-                plt.plot(targetVl[:,1], out[:,1], '^', ms = mS, color = "tab:green")
+                plt.plot(targetTe[:,0], out[:,0], 'o', ms = mS, color = "tab:red")
+                plt.plot(targetTe[:,1], out[:,1], '^', ms = mS, color = "tab:green")
                 plt.plot([-0.2, 1.2], [-0.2, 1.2], "k-")
                 plt.xlabel("target data")
                 plt.ylabel("estimated data")
                 plt.title("Regression plot for NN")
-                plt.legend(["energyEfficiency", "totalLength"], loc = "lower right")
-                plt.xlim((-0.05,1.05))
-                plt.ylim((-0.05,1.05))
+                plt.legend(["f1", "f2"], loc = "lower right")
+                plt.xlim((-0.05, 1.05))
+                plt.ylim((-0.05, 1.05))
 
                 num = seed.split("_")[-1].split(".")[0]
                 plt.savefig(netDir + "regressionPlot_" + num + ".png")
