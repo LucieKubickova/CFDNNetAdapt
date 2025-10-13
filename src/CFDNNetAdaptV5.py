@@ -10,7 +10,7 @@ import numpy as np
 import dill as pickle
 import multiprocessing
 import pyrennModV3 as prn
-import platypusModV2 as plat
+import platypusModV4 as plat
 from operator import itemgetter
 
 #~ import matplotlib.pyplot as plt
@@ -247,16 +247,23 @@ class CFDNNetAdapt:
 
     def getNondomSolutionsFromSamples(self, prevSamTotal, nSamTotal, smpNondoms = None):
         # get samples added in this iteration
-        aSource = self.souall[:,:nSamTotal]
-        aTarget = self.tarall[:,:nSamTotal]
+        aSource = self.souall[:,prevSamTotal:nSamTotal]
+        aTarget = self.tarall[:,prevSamTotal:nSamTotal]
+
+        # depracated
+        #~ # concatenate with last iteration nondominated solutions
+        #~ aAll = np.append(aSource, aTarget, axis = 0)
+        #~ if self.iteration > 1:
+            #~ aAll = np.concatenate((smpNondoms.T,aAll), axis = 1)
+
+        #~ # find current nondominated solutions
+        #~ nondoms = self.findNondominatedSolutions(aAll.T, [1,1])
 
         # concatenate with last iteration nondominated solutions
-        aAll = np.append(aSource, aTarget, axis = 0)
-        if self.iteration > 1:
-            aAll = np.concatenate((smpNondoms.T,aAll), axis = 1)
+        toAdd = np.append(aSource, aTarget, axis = 0)
 
         # find current nondominated solutions
-        nondoms = self.findNondominatedSolutions(aAll.T, [1,1])
+        nondoms = self.addNondominatedSolutions(smpNondoms.T, toAdd.T, [1,1])
         return nondoms
 
     def checkLastBestDNN(self, netNondoms, smpNondoms):
@@ -536,6 +543,40 @@ class CFDNNetAdapt:
 
         return dists
 
+    def addNondominatedSolutions(self, originalData, newData):
+        # prepare problem
+        problem = plat.Problem(self.nPars, self.nObjs)
+        problem.types[:] = [plat.Real(self.pMins[p],self.pMaxs[p]) for p in range(self.nPars)]
+
+        # create platypus non-dominated archive
+        archive = plat.Archive()
+
+        # save original data to archive
+        for solution in originalData:
+            individuum = plat.core.Solution(problem)
+            individuum.variables = [solution[i] for i in range(self.nPars)]
+            individuum.objectives = [solution[i] for i in range(self.nPars, len(solution))]
+            individuum.evaluated = True
+            archive._contents.append(individuum)
+
+        # add new data 
+        for solution in newData:
+            individuum = plat.core.Solution(problem)
+            individuum.variables = [solution[i] for i in range(self.nPars)]
+            individuum.objectives = [solution[i] for i in range(self.nPars, len(solution))]
+            individuum.evaluated = True
+            archive.add(solution)
+
+        # convert population to array
+        nonDomSolutions = list()
+        for solution in archive._contents:
+            data = solution.variables[:] + solution.objectives[:]
+            nonDomSolutions.append(data)
+        nonDomSolutions = np.array(nonDomSolutions)
+
+        return nonDomSolutions
+
+    # depracated
     def findNondominatedSolutions(self, floatData, directions):
         # prepare problem
         problem = plat.Problem(self.nPars, self.nObjs)
