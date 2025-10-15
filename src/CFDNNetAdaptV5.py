@@ -555,8 +555,8 @@ class CFDNNetAdapt:
         problem = plat.Problem(self.nPars, self.nObjs)
         problem.types[:] = [plat.Real(self.pMins[p],self.pMaxs[p]) for p in range(self.nPars)]
 
-        # create platypus non-dominated archive
-        archive = plat.Archive()
+        # clear archive
+        self.archive._contents.clear()
 
         # save original data to archive
         if originalData is not None:
@@ -565,7 +565,7 @@ class CFDNNetAdapt:
                 individuum.variables = [solution[i] for i in range(self.nPars)]
                 individuum.objectives = [solution[i] for i in range(self.nPars, len(solution))]
                 individuum.evaluated = True
-                archive._contents.append(individuum)
+                self.archive._contents.append(individuum)
 
         # add new data 
         for solution in newData.T:
@@ -573,11 +573,11 @@ class CFDNNetAdapt:
             individuum.variables = [solution[i] for i in range(self.nPars)]
             individuum.objectives = [solution[i] for i in range(self.nPars, len(solution))]
             individuum.evaluated = True
-            archive.add(individuum)
+            self.archive.add(individuum)
 
         # convert population to array
         nonDomSolutions = list()
-        for solution in archive._contents:
+        for solution in self.archive._contents:
             data = solution.variables[:] + solution.objectives[:]
             nonDomSolutions.append(data)
         nonDomSolutions = np.array(nonDomSolutions)
