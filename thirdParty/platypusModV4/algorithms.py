@@ -172,6 +172,7 @@ class NSGAII(AbstractGeneticAlgorithm):
                  archive = None,
                  checkPoint = None,
                  lastPopulation = None,
+                 outFile = None,
                  **kwargs):
         super(NSGAII, self).__init__(problem, population_size, generator, **kwargs)
         self.selector = selector
@@ -180,6 +181,7 @@ class NSGAII(AbstractGeneticAlgorithm):
         self.checkPoint = checkPoint
         self.lastPopulation = lastPopulation
         self.iIter = 0
+        self.outFile = outFile
 
     def step(self):
         self.iIter += 1
@@ -196,11 +198,14 @@ class NSGAII(AbstractGeneticAlgorithm):
 
         # verbose
         if self.problem.verbose:
-            print("Step:", self.iIter, "Evaluations done:", self.nfe, "Result length:", len(self.result))
+            print("Step:", self.iIter, "Evaluations done:", self.nfe, "Result length:", len(self.result), flush = True)
 
     def initialize(self):
         if self.checkPoint is None:
             super(NSGAII, self).initialize()
+
+            # write the first population
+            self.write_to_output(self.population)
 
         else:
             self.nfe = len(self.checkPoint)
@@ -223,6 +228,9 @@ class NSGAII(AbstractGeneticAlgorithm):
 
         self.evaluate_all(offspring)
 
+        # write the offspring population
+        self.write_to_output(offspring)
+
         offspring.extend(self.population)
         nondominated_sort(offspring)
         self.population = nondominated_truncate(offspring, self.population_size)
@@ -233,6 +241,15 @@ class NSGAII(AbstractGeneticAlgorithm):
 
         if self.lastPopulation is not None:
             self.lastPopulation = self.population[:]
+
+    def write_to_output(self, solutions):
+        if self.outFile is not None:
+            for solution in solutions:
+                if solution.evaluated:
+                    self.outFile.write(",".join([str(_) for _ in solution.variables]) + ",")
+                    self.outFile.write(",".join([str(_) for _ in solution.objectives]) + "\n")
+
+            self.outFile.flush()
 
 class EpsMOEA(AbstractGeneticAlgorithm):
     
@@ -1084,7 +1101,7 @@ class CMAES(Algorithm):
         else:
             self.archive = Archive(EpsilonDominance(epsilons))
             
-        if indicator is "hypervolume":
+        if indicator == "hypervolume":
             self.fitness_evaluator = HypervolumeFitnessEvaluator()
             self.fitness_comparator = AttributeDominance(False)
         else:
