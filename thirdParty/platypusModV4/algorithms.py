@@ -214,6 +214,7 @@ class NSGAII(AbstractGeneticAlgorithm):
 
         if self.archive is not None:
             firstRank = [s for s in self.population if s.rank == 0]
+            self.archive._contents.clear()
             self.archive._contents += firstRank
 
         if self.variator is None:
