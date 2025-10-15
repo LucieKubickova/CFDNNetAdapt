@@ -55,6 +55,7 @@ class CFDNNetAdapt:
         self.offSize = None # offspring size
         self.popSize = None # population size
         self.nGens = None # number of generations
+        self.archive = None # selected archive from platypus to same non-dominated solutions
 
         # directories and data files
         self.mainDir = None # main save directory
@@ -115,6 +116,7 @@ class CFDNNetAdapt:
         
             # log
             self.outFile.write("Starting iteration " + str(self.iteration) + "\n")
+            self.outFile.flush()
         
             # compute number of samples used
             nSamTotal, trainLen, valLen, testLen = self.prepareSamples()
@@ -123,7 +125,7 @@ class CFDNNetAdapt:
             smpNondoms = self.getNondomSolutionsFromSamples(prevSamTotal, nSamTotal, smpNondoms)
 
             # log
-            self.outFile.write("Using " + str(self.nSam) + " training samples, " + str(valLen) + " validation samples and " + str(testLen) + " testSamples\n")
+            self.outFile.write("Using " + str(self.nSam) + " training samples, " + str(valLen) + " validation samples and " + str(testLen) + " test samples\n")
             self.outFile.flush()
 
             # check the last best dnn
@@ -263,7 +265,7 @@ class CFDNNetAdapt:
         toAdd = np.append(aSource, aTarget, axis = 0)
 
         # find current nondominated solutions
-        nondoms = self.addNondominatedSolutions(smpNondoms.T, toAdd.T, [1,1])
+        nondoms = self.addNondominatedSolutions(smpNondoms, toAdd)
         return nondoms
 
     def checkLastBestDNN(self, netNondoms, smpNondoms):
@@ -299,6 +301,7 @@ class CFDNNetAdapt:
             # create network save directory
             self.prepOutDir(netDir)
             self.outFile.write("Created net " + str(netNm) + "\n")
+            self.outFile.flush()
 
             # save
             netStructs.append(netStruct)
@@ -423,6 +426,8 @@ class CFDNNetAdapt:
             # run optimization
             parallelNum = self.nSeeds*self.nNN
             moea, nondoms = self.runDNNOptimization(netStruct, netNm, netDir, parallelNum)
+            self.outFile.write("Optimization using net " + netNm + " done\n")
+            self.outFile.flush()
 
             # convert nondominated solutions to array
             netNondoms = list()
@@ -432,6 +437,8 @@ class CFDNNetAdapt:
             # compare samples and dnn nondominated solutions
             dists = self.compareParetoFronts(netNondoms, smpNondoms)
             cError = sum(dists)/len(dists)
+            self.outFile.write("Mean difference of net " + netNm + " Pareto front: " + cError + "\n")
+            self.outFile.flush()
 
             # identify the best network
             if cError < lError:
@@ -460,7 +467,7 @@ class CFDNNetAdapt:
 
         # run the optimization algorithm with archiving data
         with plat.MultiprocessingEvaluator(parallelNum) as evaluator:
-            moea = plat.NSGAII(problem, population_size = self.popSize, offspring_size = self.offSize, evaluator = evaluator, archive = plat.Archive())
+            moea = plat.NSGAII(problem, population_size = self.popSize, offspring_size = self.offSize, evaluator = evaluator, archive = self.archive)
             moea.run(self.nGens*self.popSize)
 
         # save data
@@ -552,20 +559,21 @@ class CFDNNetAdapt:
         archive = plat.Archive()
 
         # save original data to archive
-        for solution in originalData:
-            individuum = plat.core.Solution(problem)
-            individuum.variables = [solution[i] for i in range(self.nPars)]
-            individuum.objectives = [solution[i] for i in range(self.nPars, len(solution))]
-            individuum.evaluated = True
-            archive._contents.append(individuum)
+        if originalData is not None:
+            for solution in originalData.T:
+                individuum = plat.core.Solution(problem)
+                individuum.variables = [solution[i] for i in range(self.nPars)]
+                individuum.objectives = [solution[i] for i in range(self.nPars, len(solution))]
+                individuum.evaluated = True
+                archive._contents.append(individuum)
 
         # add new data 
-        for solution in newData:
+        for solution in newData.T:
             individuum = plat.core.Solution(problem)
             individuum.variables = [solution[i] for i in range(self.nPars)]
             individuum.objectives = [solution[i] for i in range(self.nPars, len(solution))]
             individuum.evaluated = True
-            archive.add(solution)
+            archive.add(individuum)
 
         # convert population to array
         nonDomSolutions = list()
