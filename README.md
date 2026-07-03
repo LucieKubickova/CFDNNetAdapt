@@ -1,27 +1,46 @@
 # CFDNNetAdapt
-CFDNNetAdapt is an adaptive CFD-DNN optimization algorithm for CFD-based shape optimization. The algorithm combines CFD with multi-objective multi-parameter optimization performed via MOEA with directly incorporated DNNs. The DNN architecture is searched for automatically and accelerate the mid-to-late MOEA iterations.
+[![DOI](https://zenodo.org/badge/729050990.svg)](https://doi.org/10.5281/zenodo.21158857)
 
-## Third party code
-MOEA --  D. Hadka, Platypus, A Free and Open Source Python Library for Multiobjective Optimization, 2020. URL: https://github.com/Project-Platypus/Platypus
+CFDNNetAdapt is an adaptive CFD–DNN optimization framework for CFD-based shape optimization. The algorithm combines computational fluid dynamics (CFD) simulations with multi-objective evolutionary optimization (MOEA) and directly integrated deep neural network (DNN) surrogate models. The DNN architecture is identified automatically during the optimization process and is used to accelerate the computationally expensive mid-to-late optimization stages.
 
-DNNs --  D. Atabay, Institute for Energy Economy and Application Technology,665 Technische Universität München, pyrenn: A recurrent neural network tool-box for python and matlab, 2018. URL: https://pyrenn.readthedocs.io/en/latest/.
+This repository accompanies the paper:
 
-## Cite this work as (article prepared for submission)
-article in preparation
+> **Lucie Kubíčková, Ondřej Gebouský, Jan Haidl, Martin Isoz**  
+> *Accelerating shape optimization by deep neural networks with on-the-fly determined architecture*  
+> Applied Soft Computing, Volume 192, 2026, 114800  
+> DOI: https://doi.org/10.1016/j.asoc.2026.114800
 
-## Compatability
-Prepared for python3 (https://www.python.org/downloads/release/python-31010/) and OpenFOAMv8 (https://openfoam.org/version/8/).
+## Repository Description
 
-## Prepare the python environment
-used python3 packages -- os, io, math, sys, shutil, numpy, scipy, re, copy, csv, dill, multiprocessing, glob, subprocess, operator, random, datetime
+The repository contains the implementation of the CFDNNetAdapt methodology used for accelerating multi-objective CFD-based shape optimization. The framework combines:
 
-python3 packages used by thirdParty codes -- six, pandas, functools, traceback, mpi4py, unittest, pickle, abc, time, logging, collections, sets
+- Multi-objective evolutionary algorithms (MOEA)
+- Adaptive deep neural network surrogate models
+- Automatic DNN architecture selection
+- CFD-based objective-function evaluation
+- Benchmark optimization cases
+- Single-phase ejector shape optimization workflows
 
-## Example run
-cd ./example/convDifShapeOptim && python3 Allrun.py
+## Third-Party Software
 
-## Testing run
-cd ./example/convDifShapeOptim && python3 testRun.py
+### MOEA
 
-## License
-CFDNNetAdapt is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software  Foundation, either version 3 of the License, or (at your option) any later version.  See http://www.gnu.org/licenses/, for a description of the GNU General Public License terms under which you can copy the files.
+D. Hadka, *Platypus: A Free and Open Source Python Library for Multiobjective Optimization*, 2020.
+
+https://github.com/Project-Platypus/Platypus
+
+### Neural Networks
+
+D. Atabay, *pyrenn: A recurrent neural network toolbox for Python and MATLAB*, Technische Universität München, 2018.
+
+https://pyrenn.readthedocs.io/en/latest/
+
+## Citation
+
+If you use this software, please cite:
+
+```text
+Kubíčková, L., Gebouský, O., Haidl, J., & Isoz, M. (2026).
+Accelerating shape optimization by deep neural networks with on-the-fly determined architecture.
+Applied Soft Computing, 192, 114800.
+https://doi.org/10.1016/j.asoc.2026.114800
