@@ -1,5 +1,5 @@
 # CFDNNetAdapt
-[![DOI](https://zenodo.org/badge/729050990.svg)](https://doi.org/10.5281/zenodo.21158857)
+[![DOI](https://img.shields.io/badge/729050990-blue.svg)](https://doi.org/10.5281/zenodo.21158857)
 
 CFDNNetAdapt is an adaptive CFD–DNN optimization framework for CFD-based shape optimization. The algorithm combines computational fluid dynamics (CFD) simulations with multi-objective evolutionary optimization (MOEA) and directly integrated deep neural network (DNN) surrogate models. The DNN architecture is identified automatically during the optimization process and is used to accelerate the computationally expensive mid-to-late optimization stages.
 
