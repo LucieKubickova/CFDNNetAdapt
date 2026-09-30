@@ -119,7 +119,7 @@ class Problem(object):
     MINIMIZE = -1
     MAXIMIZE = 1
     
-    def __init__(self, nvars, nobjs, nconstrs = 0, function=None, nfe = 0):
+    def __init__(self, nvars, nobjs, nconstrs = 0, function=None, nfe = 0, verbose = False):
         """Create a new problem.
     
         Problems can be constructed by either subclassing and overriding the
@@ -149,6 +149,7 @@ class Problem(object):
         self.directions = FixedLengthArray(nobjs, self.MINIMIZE)
         self.constraints = FixedLengthArray(nconstrs, "==0", _convert_constraint)
         self.nfe = nfe
+        self.verbose = verbose
         
     def __call__(self, solution):
         """Evaluate the solution.

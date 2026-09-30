@@ -207,7 +207,7 @@ class GAOperator(Variator):
         
     def evolve(self, parents):
         return list(map(self.mutation.evolve, self.variation.evolve(parents)))
-    
+
 class CompoundMutation(Mutation):
     
     def __init__(self, *mutators):
