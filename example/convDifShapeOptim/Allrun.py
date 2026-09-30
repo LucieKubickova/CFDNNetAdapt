@@ -9,7 +9,7 @@ import math
 import numpy as np
 import dill as pickle
 import multiprocessing
-from CFDNNetAdaptV2 import *
+from CFDNNetAdaptV3 import *
 from postProcesser import *
 from configureAndRun import *
 
@@ -89,8 +89,8 @@ def smpEvaluation(i):
     isBad = False
     note = 0
 
-    netPars = algorithm.result[i].variables[:]
-    netOuts = algorithm.result[i].objectives[:]
+    netPars = algorithm.population[i].variables[:]
+    netOuts = algorithm.population[i].objectives[:]
 
     # rescale the pars
     for p in range(len(netPars)):
@@ -339,7 +339,7 @@ algorithm.minMax = "12_minMaxAng.dat"
 
 # algorithm parameters
 algorithm.nSam = 2000
-algorithm.deltaNSam = 500
+algorithm.deltaNSams = [500]
 algorithm.nNN = 10
 algorithm.minN = 2
 algorithm.maxN = 20
