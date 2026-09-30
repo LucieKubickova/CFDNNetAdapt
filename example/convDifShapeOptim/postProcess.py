@@ -13,7 +13,7 @@ from CFDNNetAdaptV3 import *
 import matplotlib.pyplot as plt
 
 # parameters
-runDir = "01_algoRuns/run_03/"
+runDir = "01_algoRuns/run_01/"
 xName = "energyEfficiency"
 yName = "totalLength"
 logName = "log.out"
