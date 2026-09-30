@@ -2,6 +2,7 @@
 import os
 import sys
 import subprocess
+import numpy as np
 import shutil as sh
 
 # auxiliary functions for generetion of cases
