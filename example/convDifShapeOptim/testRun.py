@@ -2,8 +2,8 @@
 # import
 import os
 import sys
-sys.path.insert(1, "../../../src")
-sys.path.insert(1, "../../../thirdParty")
+sys.path.insert(1, "../../src")
+sys.path.insert(1, "../../thirdParty")
 import csv
 import math
 import numpy as np
