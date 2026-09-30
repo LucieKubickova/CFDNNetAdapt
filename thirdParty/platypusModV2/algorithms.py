@@ -1082,7 +1082,7 @@ class CMAES(Algorithm):
         else:
             self.archive = Archive(EpsilonDominance(epsilons))
             
-        if indicator is "hypervolume":
+        if indicator == "hypervolume":
             self.fitness_evaluator = HypervolumeFitnessEvaluator()
             self.fitness_comparator = AttributeDominance(False)
         else:
