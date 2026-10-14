@@ -21,6 +21,15 @@ The repository contains the implementation of the CFDNNetAdapt methodology used 
 - Benchmark optimization cases
 - Single-phase ejector shape optimization workflows
 
+## Wiki
+For more information about:
+- [Installation and Requirements](docs/01_installationAndRequirements.md)
+- [Examples and Data](docs/02_examplesAndData.md)
+- [Benchmark Showcase](docs/03_benchmarkShowcase.md)
+- [CFD Example](docs/04_cfdExample.md)
+
+see the linked wiki pages.
+
 ## Third-Party Software
 
 ### MOEA
