@@ -44,3 +44,4 @@ Kubíčková, L., Gebouský, O., Haidl, J., & Isoz, M. (2026).
 Accelerating shape optimization by deep neural networks with on-the-fly determined architecture.
 Applied Soft Computing, 192, 114800.
 https://doi.org/10.1016/j.asoc.2026.114800
+```
