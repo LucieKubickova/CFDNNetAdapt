@@ -23,10 +23,11 @@ The repository contains the implementation of the CFDNNetAdapt methodology used 
 
 ## Wiki
 For more information about:
-- [Installation and Requirements](https://luciekubickova.github.io/CFDNNetAdapt/01_installationAndRequirements)
-- [Examples and Data](https://luciekubickova.github.io/CFDNNetAdapt/02_examplesAndData)
-- [Benchmark Showcase](https://luciekubickova.github.io/CFDNNetAdapt/03_benchmarkShowcase)
-- [CFD Example](https://luciekubickova.github.io/CFDNNetAdapt/04_cfdExample)
+- [Installation and Requirements](https://luciekubickova.github.io/CFDNNetAdapt/01_installationAndRequirements.html)
+- [Examples and Data](https://luciekubickova.github.io/CFDNNetAdapt/02_examplesAndData.html)
+- [Benchmark Showcase](https://luciekubickova.github.io/CFDNNetAdapt/03_benchmarkShowcase.html)
+- [CFD Example](https://luciekubickova.github.io/CFDNNetAdapt/04_cfdExample.html)
+
 see the linked wiki pages.
 
 ## Third-Party Software
